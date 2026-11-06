@@ -59,6 +59,79 @@ mod tests {
         assert!(next_state(false, 3));
     }
 
-    // TODO (student): write the remaining cases from your truth table before you
-    // write next_state. At minimum: a live cell with 4 neighbors, a dead cell with 2.
+    // Remaining rows of the truth table (design/truth_table.md), one test per row.
+    #[test]
+    fn dead_0_stays_dead() {
+        assert!(!next_state(false, 0));
+    }
+
+    #[test]
+    fn dead_1_stays_dead() {
+        assert!(!next_state(false, 1));
+    }
+
+    #[test]
+    fn dead_2_stays_dead() {
+        assert!(!next_state(false, 2));
+    }
+
+    #[test]
+    fn dead_4_stays_dead() {
+        assert!(!next_state(false, 4));
+    }
+
+    #[test]
+    fn dead_5_stays_dead() {
+        assert!(!next_state(false, 5));
+    }
+
+    #[test]
+    fn dead_6_stays_dead() {
+        assert!(!next_state(false, 6));
+    }
+
+    #[test]
+    fn dead_7_stays_dead() {
+        assert!(!next_state(false, 7));
+    }
+
+    #[test]
+    fn dead_8_stays_dead() {
+        assert!(!next_state(false, 8));
+    }
+
+    #[test]
+    fn live_0_dies() {
+        assert!(!next_state(true, 0));
+    }
+
+    #[test]
+    fn live_3_survives() {
+        assert!(next_state(true, 3));
+    }
+
+    #[test]
+    fn live_4_dies() {
+        assert!(!next_state(true, 4));
+    }
+
+    #[test]
+    fn live_5_dies() {
+        assert!(!next_state(true, 5));
+    }
+
+    #[test]
+    fn live_6_dies() {
+        assert!(!next_state(true, 6));
+    }
+
+    #[test]
+    fn live_7_dies() {
+        assert!(!next_state(true, 7));
+    }
+
+    #[test]
+    fn live_8_dies() {
+        assert!(!next_state(true, 8));
+    }
 }
