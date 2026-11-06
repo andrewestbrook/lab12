@@ -24,8 +24,12 @@ pub fn count_neighbors(_grid: &Grid, _row: usize, _col: usize) -> u8 {
 }
 
 // The rule for one cell: does it live in the next generation?
-pub fn next_state(_alive: bool, _neighbors: u8) -> bool {
-    todo!("Implement next_state")
+pub fn next_state(alive: bool, neighbors: u8) -> bool {
+    match (alive, neighbors) {
+        (true, 2) | (true, 3) => true, // a live cell with 2 or 3 neighbors survives
+        (false, 3) => true,            // a dead cell with exactly 3 neighbors is born
+        _ => false,                    // every other cell is dead next generation
+    }
 }
 
 // Debug view: each cell's neighbor count as a digit, one line per row.
