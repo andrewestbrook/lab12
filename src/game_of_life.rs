@@ -13,8 +13,14 @@ pub fn new_grid() -> Grid {
 }
 
 // '#' for a live cell, '.' for a dead cell, one line per row.
-pub fn print_grid(_grid: &Grid) {
-    todo!("Implement print_grid")
+pub fn print_grid(grid: &Grid) {
+    for row in grid.iter() {
+        let line: String = row
+            .iter()
+            .map(|&alive| if alive { '#' } else { '.' })
+            .collect();
+        println!("{}", line);
+    }
 }
 
 // Live neighbors of (row, col): the eight surrounding cells, excluding the cell itself.
