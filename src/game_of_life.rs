@@ -25,8 +25,26 @@ pub fn print_grid(grid: &Grid) {
 
 // Live neighbors of (row, col): the eight surrounding cells, excluding the cell itself.
 // Cells beyond the edge count as dead. Careful: row - 1 on a usize of 0 panics.
-pub fn count_neighbors(_grid: &Grid, _row: usize, _col: usize) -> u8 {
-    todo!("Implement count_neighbors")
+pub fn count_neighbors(grid: &Grid, row: usize, col: usize) -> u8 {
+    let mut count: u8 = 0;
+    for dr in -1..=1_isize {
+        for dc in -1..=1_isize {
+            // The cell itself is not its own neighbor.
+            if dr == 0 && dc == 0 {
+                continue;
+            }
+            // Work in isize so row - 1 at row 0 gives -1 instead of panicking.
+            let r = row as isize + dr;
+            let c = col as isize + dc;
+            // Off the grid counts as dead: only index when inside the grid.
+            if r >= 0 && r < ROWS as isize && c >= 0 && c < COLS as isize {
+                if grid[r as usize][c as usize] {
+                    count += 1;
+                }
+            }
+        }
+    }
+    count
 }
 
 // The rule for one cell: does it live in the next generation?
@@ -143,5 +161,59 @@ mod tests {
     #[test]
     fn live_8_dies() {
         assert!(!next_state(true, 8));
+    }
+
+    // count_neighbors: middle, edges, and corners.
+    fn full_grid() -> Grid {
+        [[true; COLS]; ROWS]
+    }
+
+    #[test]
+    fn empty_grid_has_no_neighbors() {
+        let grid = new_grid();
+        assert_eq!(count_neighbors(&grid, 5, 10), 0);
+        assert_eq!(count_neighbors(&grid, 0, 0), 0);
+    }
+
+    #[test]
+    fn cell_is_not_its_own_neighbor() {
+        let mut grid = new_grid();
+        grid[5][10] = true;
+        assert_eq!(count_neighbors(&grid, 5, 10), 0);
+    }
+
+    #[test]
+    fn middle_of_full_grid_has_8() {
+        assert_eq!(count_neighbors(&full_grid(), 5, 10), 8);
+    }
+
+    #[test]
+    fn corners_of_full_grid_have_3() {
+        let grid = full_grid();
+        assert_eq!(count_neighbors(&grid, 0, 0), 3);
+        assert_eq!(count_neighbors(&grid, 0, COLS - 1), 3);
+        assert_eq!(count_neighbors(&grid, ROWS - 1, 0), 3);
+        assert_eq!(count_neighbors(&grid, ROWS - 1, COLS - 1), 3);
+    }
+
+    #[test]
+    fn edges_of_full_grid_have_5() {
+        let grid = full_grid();
+        assert_eq!(count_neighbors(&grid, 0, 10), 5);
+        assert_eq!(count_neighbors(&grid, ROWS - 1, 10), 5);
+        assert_eq!(count_neighbors(&grid, 5, 0), 5);
+        assert_eq!(count_neighbors(&grid, 5, COLS - 1), 5);
+    }
+
+    #[test]
+    fn vertical_line_in_middle() {
+        let mut grid = new_grid();
+        grid[4][10] = true;
+        grid[5][10] = true;
+        grid[6][10] = true;
+        assert_eq!(count_neighbors(&grid, 5, 10), 2); // center of the line
+        assert_eq!(count_neighbors(&grid, 4, 10), 1); // top of the line
+        assert_eq!(count_neighbors(&grid, 5, 9), 3); // beside the center
+        assert_eq!(count_neighbors(&grid, 3, 10), 1); // just above the line
     }
 }
