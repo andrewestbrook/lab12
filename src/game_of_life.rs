@@ -1,7 +1,4 @@
 // Game of Life, Week 12: grid, display, neighbor counts, the rule for one cell.
-//
-// TODO: remove the next line once every function below is used.
-#![allow(dead_code)]
 
 const ROWS: usize = 10;
 const COLS: usize = 20;
@@ -70,7 +67,42 @@ pub fn print_neighbor_counts(grid: &Grid) {
 // Set a few cells alive (hardcoded, or entered as `row col` pairs until a blank line),
 // print the grid, then the neighbor counts.
 pub fn play() {
-    todo!("Implement play")
+    let mut grid = new_grid();
+
+    // Middle: a vertical line of three live cells (rows 4-6, column 10).
+    grid[4][10] = true;
+    grid[5][10] = true;
+    grid[6][10] = true;
+
+    // Corner: a vertical line of three down the left edge, from the top-left corner.
+    grid[0][0] = true;
+    grid[1][0] = true;
+    grid[2][0] = true;
+
+    println!();
+    println!("=== GAME OF LIFE ===");
+    println!("Grid (# live, . dead):");
+    print_grid(&grid);
+    println!();
+    println!("Live neighbor counts:");
+    print_neighbor_counts(&grid);
+
+    // Apply the rule to a few single cells (this does not run a generation).
+    println!();
+    println!("The rule for a few cells (grid[row][col]):");
+    for (row, col) in [(4, 10), (5, 10), (5, 9), (0, 0), (1, 1)] {
+        let alive = grid[row][col];
+        let neighbors = count_neighbors(&grid, row, col);
+        let next = next_state(alive, neighbors);
+        println!(
+            "  grid[{}][{}]: {} with {} live neighbors -> {} next generation",
+            row,
+            col,
+            if alive { "live" } else { "dead" },
+            neighbors,
+            if next { "live" } else { "dead" }
+        );
+    }
 }
 
 #[cfg(test)]
